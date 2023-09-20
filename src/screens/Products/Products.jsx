@@ -1,13 +1,21 @@
-import { View, Text, FlatList, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
+  Touchable,
+} from "react-native";
 import { Header, SearchInput } from "../../components";
 import React, { useEffect, useState } from "react";
 import allProducts from "../../data/products";
 import { styles } from "./Products.style";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-const Products = ({ category, setCategorySelected }) => {
+const Products = ({ navigation, route }) => {
   const [arrProducts, setArrProducts] = useState([]);
   const [keyword, setKeyword] = useState("");
+  const { category } = route.params;
 
   useEffect(() => {
     if (category) {
@@ -29,18 +37,16 @@ const Products = ({ category, setCategorySelected }) => {
   return (
     <View style={styles.container}>
       <Header title={category} />
-      <Pressable onPress={() => setCategorySelected("")} style={styles.pressable}>
-        <AntDesign name="left" size={25} color={"black"} />
-        <Text>Back</Text>
-      </Pressable>
       <SearchInput onSearch={setKeyword} />
       <View style={styles.listContainer}>
         <FlatList
           data={arrProducts}
           renderItem={({ item }) => (
-            <View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Details", { product: item })}
+            >
               <Text>{item.title}</Text>
-            </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
         />
